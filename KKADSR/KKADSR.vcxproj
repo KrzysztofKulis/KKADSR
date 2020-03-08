@@ -153,6 +153,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Curves.h" />
+    <ClInclude Include="IADSR.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
