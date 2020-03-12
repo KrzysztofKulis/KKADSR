@@ -17,10 +17,10 @@
     <ClInclude Include="inc\IADSR.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\ICurve.h">
+    <ClInclude Include="inc\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\pch.h">
+    <ClInclude Include="inc\Stage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -28,13 +28,13 @@
     <ClCompile Include="src\Curves.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ICurve.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\KKADSR.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Stage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

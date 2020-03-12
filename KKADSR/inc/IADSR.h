@@ -11,6 +11,8 @@ namespace KKADSR {
 
 using CallbackFunction = std::function<void()>;
 using CurveFunction = std::function<void()>;
+using stage_num = std::size_t;
+using stage_idx = stage_num;
 
 template <typename T>
 class Stage {
@@ -22,15 +24,12 @@ class Stage {
   void SetCurve(const CurveFunction&& curve);
 
   CallbackFunction* callback_ = {};
-  std::string type = {};
+  std::string type_ = {};
 };
 
 template <typename gain>
 class ADSR {
  public:
-  using stage_num = std::size_t;
-  using stage_idx = stage_num;
-  using stage_len = std::chrono::microseconds;
   using stage_amp = gain;
 
   ADSR(const std::function<void()>&&){};
@@ -57,7 +56,7 @@ class ADSR {
    *    Set stage function
    */
   void SetStageSequence(const int num);
-  void SetStageParam(ADSR::Curves::CurveParams_t params);
+  void SetStageParam(KKADSR::Curves::CurveParams_t<gain> params);
 
  protected:
 };
