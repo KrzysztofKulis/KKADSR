@@ -1,9 +1,12 @@
 #ifndef KKADSR_IADSR_H
 #define KKADSR_IADSR_H
 
+// declare usage of precompiled headers
+#ifdef KK_USE_PCH
 #include "pch.h"
-
+#elif
 #include <chrono>
+#endif
 
 #include "Curves.h"
 

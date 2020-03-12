@@ -1,9 +1,4 @@
-﻿#include "pch.h"
-//#include "libstdaudio-master/include/audio_backend/__wasapi_backend.h"
-
-// int main() { return 0; }
-
-#ifdef _WIN32
+﻿#ifdef _WIN32
 #define _USE_MATH_DEFINES
 #endif
 

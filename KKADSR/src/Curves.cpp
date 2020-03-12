@@ -1,11 +1,10 @@
-#include "pch.h"
 #include "Curves.h"
 
 namespace KKADSR {
 namespace Curves {
 
 template <typename T>
-inline void Linear<T>::Initialize(const T max_value, const T min_value,
+void Linear<T>::Initialize(const T max_value, const T min_value,
                                   const KKADSR::Stage::stage_len& stage_len,
                                   const Curves::LinearMode mode) {
   max_value_ = max_value;
@@ -27,6 +26,11 @@ inline void Linear<T>::Initialize(const T max_value, const T min_value,
     default:
       break;
   }
+}
+
+template <typename T>
+T Linear<T>::NextValue() {
+  return value_delta_ * step_++;
 }
 
 }  // namespace Curves

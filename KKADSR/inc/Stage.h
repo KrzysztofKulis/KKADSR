@@ -1,6 +1,13 @@
 #ifndef KKADSR_STAGE_H
 #define KKADSR_STAGE_H
 
+// declare usage of precompiled headers
+#ifdef KK_USE_PCH
+#include "pch.h"
+#elif
+#include <chrono>
+#endif
+
 namespace KKADSR {
 namespace Stage {
 
@@ -14,4 +21,4 @@ using stage_len = std::chrono::microseconds;
 }  // namespace Stage
 }  // namespace KKADSR
 
-#endif
+#endif  // KKADSR_STAGE_H
