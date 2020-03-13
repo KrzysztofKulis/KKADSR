@@ -29,6 +29,9 @@
     <ClInclude Include="inc\pch\pch.h">
       <Filter>Header Files\pch</Filter>
     </ClInclude>
+    <ClInclude Include="src\pch\Common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Curves.cpp">

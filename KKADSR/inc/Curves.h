@@ -2,26 +2,29 @@
 #define KKADSR_CURVES_H
 
 // declare usage of precompiled headers
-#ifdef KK_USE_PCH
-#include "pch.h"
-#else
+#include "pch/pch.h"
+
 #include <functional>
 #include <map>
 #include <string>
 #include <vector>
-#endif
 
-#include "Stage.h"
+#include "Common.h"
 
 namespace KKADSR {
 namespace Curves {
 
 /**
- *  KKADSR::Curves namespace types
+ *  KKADSR::Curves enums
  */
+enum class LinearMode { Rising = 0, Falling };
 
 /*  Curve type index    */
 const enum class CurveTypeIndex { Linear = 0, Logarythmic };
+
+/**
+ *  KKADSR::Curves types
+ */
 
 /*  Curve parameters    */
 template <typename T>
@@ -32,14 +35,16 @@ template <typename T>
 using CurveType_t =
     std::pair<CurveTypeIndex, std::function<void(CurveParams_t<T>)>>;
 
+/*  Curve timespan  */
+using CurveTimespan = KKADSR::Common::timespan;
+
+/**
+ *  KKADSR::Curves constants
+ */
+
 const std::map<CurveTypeIndex, std::string> kCurveTypes = {
     {std::make_pair(CurveTypeIndex::Linear, "LINEAR")},
     {std::make_pair(CurveTypeIndex::Logarythmic, "LOGARYTHMIC")}};
-
-/**
- *  KKADSR::Curves enums
- */
-enum class LinearMode { Rising = 0, Falling };
 
 /**
  *  KKADR::Curves::Linear
@@ -57,10 +62,10 @@ class Linear {
   /**
    *  KKADR::Curves::Linear::Initialize
    *
-   *  Initialize start and end value of the curve, its length and monotonicity
+   *  Initialize start and end value of the curve, its timespan and monotonicity
    */
   void Initialize(const T start_value, const T end_value,
-                  const KKADSR::Stage::stage_len& stage_len,
+                  const CurveTimespan& curve_len,
                   const Curves::LinearMode mode);
 
   T NextValue();
@@ -68,13 +73,14 @@ class Linear {
  private:
   T start_value_ = {};
   T end_value_ = {};
-  KKADSR::Stage::stage_len stage_len_ = {};
+  CurveTimespan timespan_ = {};
   LinearMode mode_ = {};
   T current_value_ = {};
   T value_delta_ = {};
   StepType step_ = {};
 };
 
+// TODO: [MINOR] Implement Logarythmic Curve
 // template <typename T>
 // T Logarythmic(CurveParams_t<T> params);
 // std::map<std::string, CurveType_t<double>> CurveMap = {
