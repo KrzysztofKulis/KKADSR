@@ -6,6 +6,13 @@ namespace KKADSR {
 namespace Curves {
 
 template <typename T>
+Linear<T>::Linear(const T start_value, const T end_value,
+                  const CurveTimespan& timespan,
+                  const Curves::LinearMode mode) {
+  Initialize(start_value, end_value, timespan, mode);
+};
+
+template <typename T>
 void Linear<T>::Initialize(const T start_value, const T end_value,
                            const CurveTimespan& timespan,
                            const Curves::LinearMode mode) {

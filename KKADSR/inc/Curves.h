@@ -59,6 +59,9 @@ class Linear {
   // TODO: [MINOR] Implement constructor taking CurveParams_t (a list of params)
   Linear(CurveParams_t<T> params);
 
+  Linear(const T start_value, const T end_value, const CurveTimespan& timespan,
+         const Curves::LinearMode mode);
+
   /**
    *  KKADR::Curves::Linear::Initialize
    *
