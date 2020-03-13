@@ -4,7 +4,7 @@
 // declare usage of precompiled headers
 #ifdef KK_USE_PCH
 #include "pch.h"
-#elif
+#else
 #include <chrono>
 #endif
 

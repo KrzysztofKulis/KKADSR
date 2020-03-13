@@ -4,12 +4,12 @@
 // declare usage of precompiled headers
 #ifdef KK_USE_PCH
 #include "pch.h"
-#elif
+#else
 #include <functional>
 #include <map>
+#include <string>
 #include <vector>
 #endif
-
 
 #include "Stage.h"
 
@@ -50,27 +50,29 @@ template <typename T>
 class Linear {
   using StepType = std::size_t;
 
-  // TODO: Implement constructor taking CurveParams_t (a list of params)
+ public:
+  // TODO: [MINOR] Implement constructor taking CurveParams_t (a list of params)
   Linear(CurveParams_t<T> params);
-
-  T current_value_ = {};
-  T min_value_ = {};
-  T max_value_ = {};
-  T value_delta_ = {};
-  LinearMode mode_ = {};
-  KKADSR::Stage::stage_len stage_len_ = {};
-  StepType step_ = {};
 
   /**
    *  KKADR::Curves::Linear::Initialize
    *
    *  Initialize start and end value of the curve, its length and monotonicity
    */
-  void Initialize(const T max_value, const T min_value,
+  void Initialize(const T start_value, const T end_value,
                   const KKADSR::Stage::stage_len& stage_len,
                   const Curves::LinearMode mode);
 
   T NextValue();
+
+ private:
+  T start_value_ = {};
+  T end_value_ = {};
+  KKADSR::Stage::stage_len stage_len_ = {};
+  LinearMode mode_ = {};
+  T current_value_ = {};
+  T value_delta_ = {};
+  StepType step_ = {};
 };
 
 // template <typename T>
