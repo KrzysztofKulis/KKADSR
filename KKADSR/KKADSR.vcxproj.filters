@@ -9,6 +9,12 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
+    <Filter Include="Source Files\pch">
+      <UniqueIdentifier>{25c0129f-9691-446e-806b-e1212c9c4d52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pch">
+      <UniqueIdentifier>{453bde42-4ff9-41c1-8a32-9dfbf79e0c6e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\Curves.h">
@@ -17,11 +23,11 @@
     <ClInclude Include="inc\IADSR.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\pch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="inc\Stage.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\pch\pch.h">
+      <Filter>Header Files\pch</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -31,11 +37,11 @@
     <ClCompile Include="src\KKADSR.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\pch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Stage.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pch\pch.cpp">
+      <Filter>Source Files\pch</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
