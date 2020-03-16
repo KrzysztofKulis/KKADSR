@@ -17,6 +17,12 @@ namespace Common {
 /*  Stage timespan  */
 using timespan = std::chrono::microseconds;
 
+/*  Callback function   */
+using CallbackFunction = std::function<void()>;
+
+/*  Curve function   */
+using CurveFunction = std::function<void()>;
+
 }  // namespace Common
 }  // namespace KKADSR
 

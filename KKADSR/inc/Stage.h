@@ -6,6 +6,7 @@
 #include <chrono>
 
 #include "Common.h"
+#include "Curves.h"
 
 namespace KKADSR {
 namespace Stage {
@@ -15,7 +16,24 @@ namespace Stage {
  */
 
 /*  Stage timespan  */
-using stage_len = KKADSR::Common::timespan;
+using StageTimespan = Common::timespan;
+
+/**
+ *  KKADSR::Stage::Stage
+ *
+ *  Keeps single stage parameters
+ */
+
+template <typename T>
+class Stage {
+ public:
+  Stage(const T start_value, const T end_value, const StageTimespan& timespan,
+        const Curves::LinearMode mode);
+  T Proceed();
+
+ private:
+  Curves::Linear<T> curve_;
+};
 
 }  // namespace Stage
 }  // namespace KKADSR

@@ -17,9 +17,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="inc\Curves.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="inc\IADSR.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -29,7 +26,10 @@
     <ClInclude Include="inc\pch\pch.h">
       <Filter>Header Files\pch</Filter>
     </ClInclude>
-    <ClInclude Include="src\pch\Common.h">
+    <ClInclude Include="inc\Common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Curves.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

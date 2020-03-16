@@ -1,34 +1,17 @@
 #ifndef KKADSR_IADSR_H
 #define KKADSR_IADSR_H
 
-// declare usage of precompiled headers
-#ifdef KK_USE_PCH
-#include "pch.h"
-#else
+#include "pch/pch.h"
+
 #include <chrono>
-#endif
 
 #include "Curves.h"
 
 namespace KKADSR {
-
-using CallbackFunction = std::function<void()>;
+namespace ADSR {
 using CurveFunction = std::function<void()>;
 using stage_num = std::size_t;
 using stage_idx = stage_num;
-
-template <typename T>
-class Stage {
- public:
-  void set_type(const std::string& type);
-  std::string type() const;
-
- private:
-  void SetCurve(const CurveFunction&& curve);
-
-  CallbackFunction* callback_ = {};
-  std::string type_ = {};
-};
 
 template <typename gain>
 class ADSR {
@@ -59,10 +42,11 @@ class ADSR {
    *    Set stage function
    */
   void SetStageSequence(const int num);
-  void SetStageParam(KKADSR::Curves::CurveParams_t<gain> params);
+  void SetStageParam(Curves::CurveParams_t<gain> params);
 
  protected:
 };
+}  // namespace ADSR
 }  // namespace KKADSR
 
 #endif

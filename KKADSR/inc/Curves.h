@@ -38,6 +38,9 @@ using CurveType_t =
 /*  Curve timespan  */
 using CurveTimespan = KKADSR::Common::timespan;
 
+/*  Curve stepspan  */
+using CurveStepspan = unsigned int;
+
 /**
  *  KKADSR::Curves constants
  */
@@ -53,13 +56,13 @@ const std::map<CurveTypeIndex, std::string> kCurveTypes = {
  */
 template <typename T>
 class Linear {
-  using StepType = std::size_t;
-
  public:
+  
+     using StepType = std::size_t;
   // TODO: [MINOR] Implement constructor taking CurveParams_t (a list of params)
-  Linear(CurveParams_t<T> params);
+  Linear(const CurveParams_t<T>& params);
 
-  Linear(const T start_value, const T end_value, const CurveTimespan& timespan,
+  Linear(const T start_value, const T end_value, const CurveStepspan& stepspan,
          const Curves::LinearMode mode);
 
   /**
@@ -68,7 +71,7 @@ class Linear {
    *  Initialize start and end value of the curve, its timespan and monotonicity
    */
   void Initialize(const T start_value, const T end_value,
-                  const CurveTimespan& curve_len,
+                  const CurveStepspan& stepspan,
                   const Curves::LinearMode mode);
 
   T NextValue();
@@ -76,7 +79,7 @@ class Linear {
  private:
   T start_value_ = {};
   T end_value_ = {};
-  CurveTimespan timespan_ = {};
+  CurveStepspan stepspan_ = {};
   LinearMode mode_ = {};
   T current_value_ = {};
   T value_delta_ = {};

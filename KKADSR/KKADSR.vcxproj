@@ -19,11 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="inc\Common.h" />
     <ClInclude Include="inc\Curves.h" />
     <ClInclude Include="inc\IADSR.h" />
     <ClInclude Include="inc\pch\pch.h" />
     <ClInclude Include="inc\Stage.h" />
-    <ClInclude Include="src\pch\Common.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Curves.cpp" />
