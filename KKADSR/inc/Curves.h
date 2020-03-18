@@ -57,8 +57,7 @@ const std::map<CurveTypeIndex, std::string> kCurveTypes = {
 template <typename T>
 class Linear {
  public:
-  
-     using StepType = std::size_t;
+  using StepType = std::size_t;
   // TODO: [MINOR] Implement constructor taking CurveParams_t (a list of params)
   Linear(const CurveParams_t<T>& params);
 
@@ -71,10 +70,11 @@ class Linear {
    *  Initialize start and end value of the curve, its timespan and monotonicity
    */
   void Initialize(const T start_value, const T end_value,
-                  const CurveStepspan& stepspan,
-                  const Curves::LinearMode mode);
+                  const CurveStepspan& stepspan, const Curves::LinearMode mode);
 
   T NextValue();
+
+  bool IsLastStep() const;
 
  private:
   T start_value_ = {};
@@ -84,6 +84,7 @@ class Linear {
   T current_value_ = {};
   T value_delta_ = {};
   StepType step_ = {};
+  bool is_last_step_ = {};
 };
 
 // TODO: [MINOR] Implement Logarythmic Curve

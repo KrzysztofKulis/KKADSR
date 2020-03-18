@@ -23,6 +23,10 @@ using CallbackFunction = std::function<void()>;
 /*  Curve function   */
 using CurveFunction = std::function<void()>;
 
+/*  Variadic function   */
+template <typename... Args>
+using VariadicFunction = std::function<void(Args...)>;
+
 }  // namespace Common
 }  // namespace KKADSR
 

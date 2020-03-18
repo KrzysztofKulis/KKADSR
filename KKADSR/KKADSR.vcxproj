@@ -21,11 +21,12 @@
   <ItemGroup>
     <ClInclude Include="inc\Common.h" />
     <ClInclude Include="inc\Curves.h" />
-    <ClInclude Include="inc\IADSR.h" />
+    <ClInclude Include="inc\ADSR.h" />
     <ClInclude Include="inc\pch\pch.h" />
     <ClInclude Include="inc\Stage.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ADSR.cpp" />
     <ClCompile Include="src\Curves.cpp" />
     <ClCompile Include="src\KKADSR.cpp" />
     <ClCompile Include="src\pch\pch.cpp">

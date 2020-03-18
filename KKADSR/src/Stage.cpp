@@ -15,6 +15,11 @@ T Stage<T>::Proceed() {
   return this->curve_.NextValue();
 }
 
+template <typename T>
+inline bool Stage<T>::IsLastStep() const {
+  return is_last_step_;
+}
+
 template class Stage<float>;
 template class Stage<double>;
 template class Stage<int>;

@@ -6,40 +6,36 @@
 
 #include <math.h>
 #include <array>
+#include <functional>
 #include <thread>
 #include "libstdaudio-master/include/audio.h"
 
-#include "Stage.h"
+#include "ADSR.h"
+#include "Common.h"
 
 int main() {
-  auto i = 1;
+  using namespace KKADSR::ADSR;
+  using namespace KKADSR::Curves;
   using template_type = double;
-  template_type start_value = 20.0;
-  template_type end_value = 100.0;
-  KKADSR::Stage::StageTimespan span(100);
-  KKADSR::Curves::LinearMode mode = KKADSR::Curves::LinearMode::Rising;
-  KKADSR::Stage::Stage<template_type> stage(start_value, end_value, span, mode);
+  KKADSR::ADSR::ADSR<template_type> adsr;
+  adsr.CreateStage(0, stage_len(500), 0.0, 1.0, LinearMode::Rising);
+  adsr.CreateStage(1, stage_len(250), 1.0, 0.5, LinearMode::Falling);
+  adsr.CreateStage(2, stage_len(2000), 0.5, 0.5, LinearMode::Rising);
+  adsr.CreateStage(3, stage_len(500), 0.5, 0.0, LinearMode::Falling);
 
+  do {
+  std::cout << adsr.GetOutput() << std::endl;
+  } while (adsr.IsOn());
 
-  auto s = 0.0;
-  while (s != end_value) {
-    s = stage.Proceed();
-    std::cout << s << std::endl;
-  }
+  //using namespace std::experimental;
+  //auto device = get_default_audio_output_device();
+  //if (!device) return 1;
 
-  // using namespace std::experimental;
-  // KKADSR::Curves::Linear<template_type> lin(start_value, end_value, span,
-  // mode);
-  // auto device = get_default_audio_output_device();
-  // if (!device) return 1;
+  //float frequency_hz = 124.0f;
+  //float delta = 2.0f * frequency_hz * float(M_PI / device->get_sample_rate());
+  //float phase = 0;
 
-  // float frequency_hz = 124.0f;
-  // float delta = 2.0f * frequency_hz * float(M_PI /
-  // device->get_sample_rate()); float phase = 0;
-
-  ////KKADSR::ADSR()
-
-  // device->connect([=](audio_device&,
+  //device->connect([=, &adsr](audio_device&,
   //                    audio_device_io<float> & io) mutable noexcept {
   //  if (!io.output_buffer.has_value()) return;
 
@@ -49,14 +45,17 @@ int main() {
   //    float next_sample = std::sin(phase);
   //    phase = std::fmod(phase + delta, 2.0f * static_cast<float>(M_PI));
 
-  //    // implement example of adsr
-
   //    for (int channel = 0; channel < out.size_channels(); ++channel)
-  //      out(frame, channel) = 0.2f * next_sample;
+  //    {
+  //      auto f = 0.2f * next_sample;
+  //      auto g = adsr.GetOutput();
+  //      //std::cout << f << ' ' << g << '\n';
+  //      out(frame, channel) = f;
+  //    }
   //  }
   //});
 
-  // device->start();
-  // std::this_thread::sleep_for(std::chrono::seconds(5));
+  //device->start();
+  //std::this_thread::sleep_for(std::chrono::seconds(5));
   return 0;
 }

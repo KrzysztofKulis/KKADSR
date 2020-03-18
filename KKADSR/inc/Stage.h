@@ -30,9 +30,11 @@ class Stage {
   Stage(const T start_value, const T end_value, const StageTimespan& timespan,
         const Curves::LinearMode mode);
   T Proceed();
+  bool IsLastStep() const;
 
  private:
   Curves::Linear<T> curve_;
+  bool is_last_step_ = {};
 };
 
 }  // namespace Stage
