@@ -24,7 +24,7 @@ void Linear<T>::Initialize(const T start_value, const T end_value,
   stepspan_ = stepspan;
   mode_ = mode;
   current_value_ = start_value_;
-  value_delta_ = static_cast<T>(stepspan_) / (end_value - start_value);
+  value_delta_ = (end_value - start_value) / static_cast<T>(stepspan_);
   step_ = {};
   is_last_step_ = {};
 }
@@ -33,13 +33,18 @@ template <typename T>
 inline T Linear<T>::NextValue() {
   T next_value = value_delta_ * static_cast<T>(step_) + start_value_;
   ++step_;
-  step_ != stepspan_ ? is_last_step_ = false : is_last_step_ = true;
+  step_ > stepspan_ ? is_last_step_ = true : is_last_step_ = false;
   return next_value;
 }
 
 template <typename T>
 inline bool Linear<T>::IsLastStep() const {
   return is_last_step_;
+}
+
+template <typename T>
+inline void Linear<T>::ResetStep(){
+  step_ = {};
 }
 
 // explicit template instatiation

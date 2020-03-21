@@ -22,11 +22,14 @@ void ADSR<T>::ClockFun() {
 
 template <typename T>
 ADSR<T>::ADSR() {
-  clock_resolution_ = Common::timespan(1);
+  clock_resolution_ = Stage::ClockResolution(200);
   clock_fun_ = ClockFun;
-  clock_thread_ = std::make_unique<std::thread>(ClockFun);
-  std::scoped_lock<std::mutex> lock(step_ready_mtx_);
-  step_ready_.store(true);
+  clock_thread_ = std::make_unique<std::thread>(&ClockFun);
+  clock_thread_->detach();
+  {
+    std::scoped_lock<std::mutex> lock(step_ready_mtx_);
+    step_ready_.store(true);
+  }
 }
 
 template <typename T>
@@ -34,10 +37,16 @@ T ADSR<T>::GetOutput() {
   if (step_ready_.load()) {
     result_ = stages_.at(stage_idx_)->Proceed();
     if (stages_.at(stage_idx_)->IsLastStep()) {
+      stages_.at(stage_idx_)->Reset();
       ++stage_idx_;
+      if (stage_idx_ == stages_.size()) {
+        stage_idx_ = {};
+      }
     }
-    std::scoped_lock<std::mutex> lock(step_ready_mtx_);
-    step_ready_.store(true);
+    {
+      std::scoped_lock<std::mutex> lock(step_ready_mtx_);
+      step_ready_.store(true);
+    }
   }
   return result_;
 }
@@ -53,8 +62,8 @@ template <typename T>
 void ADSR<T>::CreateStage(const stage_idx idx, const stage_len len,
                           const stage_amp min_amp, const stage_amp max_amp,
                           const Curves::LinearMode mode) {
-  stages_.push_back(
-      std::make_unique<Stage::Stage<T>>(min_amp, max_amp, len, mode));
+  stages_.push_back(std::make_unique<Stage::Stage<T>>(min_amp, max_amp, len,
+                                                      mode, clock_resolution_));
 }
 
 template <typename T>
@@ -64,6 +73,16 @@ template <typename T>
 bool ADSR<T>::IsOn() {
   return !(stage_idx_ == stages_.size() ||
            stages_.at(stage_idx_)->IsLastStep());
+}
+
+template <typename T>
+bool ADSR<T>::Trigger() {
+  if (!IsOn()) {
+    return false;
+  }
+
+  stage_idx_ = {};
+  return true;
 }
 
 template <typename T>

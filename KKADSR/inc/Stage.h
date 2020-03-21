@@ -16,7 +16,10 @@ namespace Stage {
  */
 
 /*  Stage timespan  */
-using StageTimespan = Common::timespan;
+using StageTimespan = Common::timespan_m;
+
+/*  Clock resolution */
+using ClockResolution = Common::timespan_u;
 
 /**
  *  KKADSR::Stage::Stage
@@ -28,13 +31,13 @@ template <typename T>
 class Stage {
  public:
   Stage(const T start_value, const T end_value, const StageTimespan& timespan,
-        const Curves::LinearMode mode);
+        const Curves::LinearMode mode, const ClockResolution resolution);
   T Proceed();
   bool IsLastStep() const;
+  void Reset();
 
  private:
   Curves::Linear<T> curve_;
-  bool is_last_step_ = {};
 };
 
 }  // namespace Stage

@@ -14,8 +14,11 @@ namespace Common {
  *  KKADSR::Common types
  */
 
-/*  Stage timespan  */
-using timespan = std::chrono::microseconds;
+/*  Timespan in microseconds */
+using timespan_u = std::chrono::microseconds;
+
+/*  Timespan in milliseconds */
+using timespan_m = std::chrono::milliseconds;
 
 /*  Callback function   */
 using CallbackFunction = std::function<void()>;

@@ -35,11 +35,8 @@ template <typename T>
 using CurveType_t =
     std::pair<CurveTypeIndex, std::function<void(CurveParams_t<T>)>>;
 
-/*  Curve timespan  */
-using CurveTimespan = KKADSR::Common::timespan;
-
 /*  Curve stepspan  */
-using CurveStepspan = unsigned int;
+using CurveStepspan = unsigned long long int;
 
 /**
  *  KKADSR::Curves constants
@@ -75,6 +72,8 @@ class Linear {
   T NextValue();
 
   bool IsLastStep() const;
+
+  void ResetStep();
 
  private:
   T start_value_ = {};

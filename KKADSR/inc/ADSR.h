@@ -19,7 +19,7 @@ namespace ADSR {
 using CurveFunction = std::function<void()>;
 using stage_num = std::size_t;
 using stage_idx = stage_num;
-using stage_len = Common::timespan;
+using stage_len = Common::timespan_m;
 using stage_fun = Common::CurveFunction;
 
 template <typename T>
@@ -64,6 +64,8 @@ class ADSR {
 
   bool IsOn();
 
+  bool Trigger();
+
   void SetStageParam(Curves::CurveParams_t<T> params);
 
   static void ClockFun();
@@ -73,7 +75,7 @@ class ADSR {
   stage_idx stage_idx_ = {};
   
   static inline Common::CallbackFunction clock_fun_ = {};
-  static inline Common::timespan clock_resolution_ = {};
+  static inline Common::timespan_u clock_resolution_ = {};
   static inline std::unique_ptr<std::thread> clock_thread_ = {};
   static inline std::atomic_bool step_ready_ = {};
   static inline std::mutex step_ready_mtx_ = {};
