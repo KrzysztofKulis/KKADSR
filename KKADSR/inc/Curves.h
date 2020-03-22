@@ -73,7 +73,7 @@ class Linear {
 
   bool IsLastStep() const;
 
-  void ResetStep();
+  void Reset();
 
  private:
   T start_value_ = {};

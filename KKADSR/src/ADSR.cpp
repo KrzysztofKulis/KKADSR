@@ -24,30 +24,50 @@ template <typename T>
 ADSR<T>::ADSR() {
   clock_resolution_ = Stage::ClockResolution(200);
   clock_fun_ = ClockFun;
-  clock_thread_ = std::make_unique<std::thread>(&ClockFun);
-  clock_thread_->detach();
   {
     std::scoped_lock<std::mutex> lock(step_ready_mtx_);
-    step_ready_.store(true);
+    step_ready_.store(false);
   }
+  clock_thread_ = std::make_unique<std::thread>(&ClockFun);
+  clock_thread_->detach();
 }
 
 template <typename T>
 T ADSR<T>::GetOutput() {
-  if (step_ready_.load()) {
-    result_ = stages_.at(stage_idx_)->Proceed();
-    if (stages_.at(stage_idx_)->IsLastStep()) {
-      stages_.at(stage_idx_)->Reset();
-      ++stage_idx_;
-      if (stage_idx_ == stages_.size()) {
-        stage_idx_ = {};
-      }
-    }
-    {
-      std::scoped_lock<std::mutex> lock(step_ready_mtx_);
-      step_ready_.store(true);
+  if (!IsOn()) {
+    return T{};
+  }
+
+  if (!step_ready_.load()) {
+    return result_;
+  }
+
+  static std::chrono::high_resolution_clock::time_point start = {};
+
+  static std::vector<long long> timer;
+  timer.reserve(200000);
+
+  timer.push_back(std::chrono::duration_cast<std::chrono::microseconds>(
+                      std::chrono::high_resolution_clock::now() - start)
+                      .count());
+
+  start = std::chrono::high_resolution_clock::now();
+
+  result_ = stages_.at(stage_idx_)->Proceed();
+
+  if (stages_.at(stage_idx_)->IsLastStep()) {
+    stages_.at(stage_idx_)->Reset();
+    ++stage_idx_;
+    if (stage_idx_ == stages_.size()) {
+      stage_idx_ = {};
+      is_on_ = false;
     }
   }
+  {
+    std::scoped_lock<std::mutex> lock(step_ready_mtx_);
+    step_ready_.store(true);
+  }
+
   return result_;
 }
 
@@ -71,17 +91,22 @@ void ADSR<T>::SetStageSequence(const int num) {}
 
 template <typename T>
 bool ADSR<T>::IsOn() {
-  return !(stage_idx_ == stages_.size() ||
-           stages_.at(stage_idx_)->IsLastStep());
+  return is_on_;
 }
 
 template <typename T>
 bool ADSR<T>::Trigger() {
-  if (!IsOn()) {
+  if (IsOn()) {
     return false;
   }
 
+  stages_.at(stage_idx_)->Reset();
   stage_idx_ = {};
+  is_on_ = true;
+  {
+    std::scoped_lock<std::mutex> lock(step_ready_mtx_);
+    step_ready_.store(true);
+  }
   return true;
 }
 

@@ -73,13 +73,14 @@ class ADSR {
  protected:
   std::vector<std::unique_ptr<Stage::Stage<T>>> stages_ = {};
   stage_idx stage_idx_ = {};
-  
+
   static inline Common::CallbackFunction clock_fun_ = {};
   static inline Common::timespan_u clock_resolution_ = {};
   static inline std::unique_ptr<std::thread> clock_thread_ = {};
   static inline std::atomic_bool step_ready_ = {};
   static inline std::mutex step_ready_mtx_ = {};
   T result_ = {};
+  bool is_on_ = {};
 };
 }  // namespace ADSR
 }  // namespace KKADSR

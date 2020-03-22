@@ -43,7 +43,7 @@ inline bool Linear<T>::IsLastStep() const {
 }
 
 template <typename T>
-inline void Linear<T>::ResetStep(){
+inline void Linear<T>::Reset(){
   step_ = {};
 }
 

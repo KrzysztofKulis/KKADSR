@@ -26,7 +26,18 @@ inline bool Stage<T>::IsLastStep() const {
 
 template <typename T>
 void Stage<T>::Reset() {
-  curve_.ResetStep();
+  curve_.Reset();
+  is_on_ = false;
+}
+
+template <typename T>
+bool Stage<T>::IsOn() const {
+  return is_on_;
+}
+
+template <typename T>
+void Stage<T>::Start() {
+  is_on_ = true;
 }
 
 template class Stage<float>;

@@ -35,9 +35,12 @@ class Stage {
   T Proceed();
   bool IsLastStep() const;
   void Reset();
+  bool IsOn() const;
+  void Start();
 
  private:
   Curves::Linear<T> curve_;
+  bool is_on_ = {};
 };
 
 }  // namespace Stage
