@@ -1,5 +1,7 @@
 #include "pch/pch.h"
 
+#include <iostream>
+#include <numeric>
 #include "ADSR.h"
 
 namespace KKADSR {
@@ -8,14 +10,19 @@ namespace ADSR {
 template <typename T>
 void ADSR<T>::ClockFun() {
   while (true) {
-    while (!step_ready_.load()) {
+    // wait for clock trigger
+    while (!enable_clock_.load()) {
+    }
+    // clear flag
+    {
+      std::scoped_lock<std::mutex> lock(enable_clock_mtx_);
+      enable_clock_.store(false);
     }
     std::this_thread::sleep_for(clock_resolution_);
+    // signal that the next value may be calculated
     {
-      std::scoped_lock<std::mutex> lock(step_ready_mtx_);
-      step_ready_.store(true);
-    }
-    while (step_ready_.load()) {
+      std::scoped_lock<std::mutex> lock(enable_get_output_mtx_);
+      enable_get_output_.store(true);
     }
   }
 }
@@ -25,8 +32,12 @@ ADSR<T>::ADSR() {
   clock_resolution_ = Stage::ClockResolution(200);
   clock_fun_ = ClockFun;
   {
-    std::scoped_lock<std::mutex> lock(step_ready_mtx_);
-    step_ready_.store(false);
+    std::scoped_lock<std::mutex> lock(enable_get_output_mtx_);
+    enable_get_output_.store(true);
+  }
+  {
+    std::scoped_lock<std::mutex> lock(enable_clock_mtx_);
+    enable_clock_.store(false);
   }
   clock_thread_ = std::make_unique<std::thread>(&ClockFun);
   clock_thread_->detach();
@@ -35,11 +46,18 @@ ADSR<T>::ADSR() {
 template <typename T>
 T ADSR<T>::GetOutput() {
   if (!IsOn()) {
-    return T{};
+    return {};
   }
 
-  if (!step_ready_.load()) {
+  // return if clock still counting
+  if (!enable_get_output_.load()) {
     return result_;
+  }
+
+  // clear flag
+  {
+    std::scoped_lock<std::mutex> lock(enable_get_output_mtx_);
+    enable_get_output_.store(false);
   }
 
   static std::chrono::high_resolution_clock::time_point start = {};
@@ -55,6 +73,14 @@ T ADSR<T>::GetOutput() {
 
   result_ = stages_.at(stage_idx_)->Proceed();
 
+  if (timer.size() == 100) {
+    static size_t mean = 0;
+    static auto avg =
+        std::accumulate(timer.begin() + 5, timer.end(), 0LL) / timer.size();
+   // std::cout << "Average time: " << avg << "us." << std::endl;
+    timer.clear();
+  }
+
   if (stages_.at(stage_idx_)->IsLastStep()) {
     stages_.at(stage_idx_)->Reset();
     ++stage_idx_;
@@ -63,9 +89,11 @@ T ADSR<T>::GetOutput() {
       is_on_ = false;
     }
   }
+
+  // start clock
   {
-    std::scoped_lock<std::mutex> lock(step_ready_mtx_);
-    step_ready_.store(true);
+    std::scoped_lock<std::mutex> lock(enable_clock_mtx_);
+    enable_clock_.store(true);
   }
 
   return result_;
@@ -103,10 +131,10 @@ bool ADSR<T>::Trigger() {
   stages_.at(stage_idx_)->Reset();
   stage_idx_ = {};
   is_on_ = true;
-  {
-    std::scoped_lock<std::mutex> lock(step_ready_mtx_);
-    step_ready_.store(true);
-  }
+  //{
+  //  std::scoped_lock<std::mutex> lock(enable_get_output_mtx_);
+  //  enable_get_output_.store(true);
+  //}
   return true;
 }
 

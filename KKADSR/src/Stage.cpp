@@ -12,7 +12,11 @@ Stage<T>::Stage(const T start_value, const T end_value,
     : curve_(start_value, end_value,
              std::chrono::duration_cast<ClockResolution>(timespan).count() /
                  resolution.count(),
-             mode) {}
+             mode) {
+  volatile auto step_count_per_stage =
+      std::chrono::duration_cast<ClockResolution>(timespan).count() /
+      resolution.count();
+}
 
 template <typename T>
 T Stage<T>::Proceed() {

@@ -31,7 +31,11 @@ class ADSR {
   static constexpr const stage_idx max_stage_idx =
       std::numeric_limits<stage_idx>::max();
   ADSR();
-  ~ADSR(){};
+  ADSR& operator=(const ADSR& other) = delete;
+  ADSR& operator=(ADSR&& other) noexcept = delete;
+  ADSR (const ADSR& other) = delete;
+  ADSR (ADSR&& other) noexcept = delete;
+  ~ADSR() = default;
 
   /**
    *    Get output amplitude
@@ -77,8 +81,10 @@ class ADSR {
   static inline Common::CallbackFunction clock_fun_ = {};
   static inline Common::timespan_u clock_resolution_ = {};
   static inline std::unique_ptr<std::thread> clock_thread_ = {};
-  static inline std::atomic_bool step_ready_ = {};
-  static inline std::mutex step_ready_mtx_ = {};
+  static inline std::atomic_bool enable_get_output_ = {};
+  static inline std::atomic_bool enable_clock_ = {};
+  static inline std::mutex enable_get_output_mtx_ = {};
+  static inline std::mutex enable_clock_mtx_ = {};
   T result_ = {};
   bool is_on_ = {};
 };
